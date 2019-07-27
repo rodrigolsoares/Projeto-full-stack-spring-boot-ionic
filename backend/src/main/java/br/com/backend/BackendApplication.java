@@ -10,10 +10,15 @@ import org.springframework.context.annotation.Bean;
 
 import br.com.backend.domain.Categoria;
 import br.com.backend.domain.Cidade;
+import br.com.backend.domain.Cliente;
+import br.com.backend.domain.Endereco;
 import br.com.backend.domain.Estado;
 import br.com.backend.domain.Produto;
+import br.com.backend.enums.TipoCliente;
 import br.com.backend.repositories.CategoriaRepository;
 import br.com.backend.repositories.CidadeRepository;
+import br.com.backend.repositories.ClienteRepository;
+import br.com.backend.repositories.EnderecoRepository;
 import br.com.backend.repositories.EstadoRepository;
 import br.com.backend.repositories.ProdutoRepository;
 import springfox.documentation.builders.PathSelectors;
@@ -37,6 +42,12 @@ public class BackendApplication implements CommandLineRunner{
 	
 	@Autowired
 	private CidadeRepository cidadeRepository;
+	
+	@Autowired
+	private ClienteRepository clienteRepository;
+	
+	@Autowired
+	private EnderecoRepository enderecoRepository;
 	
 	@Bean
     public Docket swagger() {
@@ -85,8 +96,17 @@ public class BackendApplication implements CommandLineRunner{
 		estadoRepository.saveAll(Arrays.asList(estado1, estado2));
 		cidadeRepository.saveAll(Arrays.asList(cidade1, cidade2, cidade3));
 		
+		Cliente cli1 = new Cliente(null, "João", "joao", "23456563563", TipoCliente.PESSOA_FISICA);
+		cli1.getTelefone().addAll(Arrays.asList("7653812", "7656312"));
+		
+		Endereco ende1 = new Endereco(null, "AV do malandro", "100", "", "Sei la", "034566939", cli1, cidade1);
+		Endereco ende2 = new Endereco(null, "AV dos caras", "100", "", "Sei la", "034566939", cli1, cidade2);
+		
+		cli1.getEnderecos().addAll(Arrays.asList(ende1, ende2));
 		
 		
+		clienteRepository.save(cli1);
+		enderecoRepository.saveAll(Arrays.asList(ende1, ende2));
 		
 	}
 
